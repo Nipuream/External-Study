@@ -1,0 +1,4 @@
+include ':app', ':workmodule', ':basemodule'
+
+project(':workmodule').projectDir = new File(settingsDir,'workmodule')
+project(':basemodule').projectDir = new File(settingsDir,'basemodule')
