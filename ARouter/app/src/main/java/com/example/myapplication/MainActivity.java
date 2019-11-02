@@ -25,9 +25,9 @@ public class MainActivity extends AppCompatActivity {
                 super.run();
 
                 //1. 应用类 简单的跳转
-//                ARouter.getInstance().build("/test/activity").navigation();
+                ARouter.getInstance().build("/work/main").navigation();
 
-                //2. 携带参数跳转
+      /*          //2. 携带参数跳转
                 ARouter.getInstance().build("/test/activity")
                         .withLong("key1",666L)
                         .withString("key2","999")
@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
                             public void onInterrupt(Postcard postcard) {
 
                             }
-                        });
+                        });*/
             }
         }.start();
 

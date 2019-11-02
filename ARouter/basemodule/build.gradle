@@ -4,14 +4,13 @@ apply plugin: 'com.android.library'
 android {
     compileSdkVersion 28
 
-
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
+        multiDexEnabled true
         javaCompileOptions {
             annotationProcessorOptions {
                 arguments = [AROUTER_MODULE_NAME: project.getName(), AROUTER_GENERATE_DOC: "enable"]
@@ -41,5 +40,9 @@ dependencies {
     implementation 'com.alibaba:arouter-api:1.5.0'
     annotationProcessor 'com.alibaba:arouter-compiler:1.2.2'
     implementation 'com.alibaba:fastjson:1.2.61'
-    implementation 'com.alibaba:fastjson:1.1.71.android'
+    implementation ('com.alibaba:fastjson:1.1.71.android'){
+        exclude group: 'com.android.support'
+        exclude module: 'appcompat-v7'
+        exclude module: 'support-v4'
+    }
 }

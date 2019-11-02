@@ -8,7 +8,7 @@ import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.example.myapplication.info.Test;
 
-@Route(path = "/test/activity")
+@Route(path = "/app/test")
 public class TestActivity extends AppCompatActivity {
 
     @Autowired(name = "key1")
