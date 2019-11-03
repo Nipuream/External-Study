@@ -8,7 +8,6 @@ import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.example.basemodule.service.HelloService;
-import com.example.myapplication.R;
 
 @Route(path = "/work/main")
 public class MainActivity extends AppCompatActivity {

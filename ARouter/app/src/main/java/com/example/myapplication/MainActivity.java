@@ -8,6 +8,26 @@ import com.alibaba.android.arouter.facade.Postcard;
 import com.alibaba.android.arouter.facade.callback.NavigationCallback;
 import com.alibaba.android.arouter.launcher.ARouter;
 
+
+/**
+ * a.ARouter跳转的过程？
+ *
+ * 1.预处理url，PathReplaceService 实现路径动态加载
+ * 2.Warehouse.reutes 匹配
+ * 3.找到Url对应界面，如果找到则进行调转，没找到则进入第四步骤
+ * 4.进行降级处理
+ * 5.如果不是Activity则直接通过反射 返回对象的实例
+ * 6.如果是Activity则进行拦截器处理，线程池 + CoutDownLauch
+ *
+ * b.如果将对象注入到带有Autowired的字段中去？
+ * 1.ARouter.getInstance().inject(this);
+ * 2.将每个this生成 ISyringe 类型的类
+ * 3.将bundle中的值赋值到实例中的参数中去
+ *
+ * c.为什么通信不使用 startActivity?
+ * 解耦合，可通过模块去查找对应的路由表，知道跳转到具体的Activity.
+ *
+ */
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "app_MainActivity";
