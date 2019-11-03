@@ -7,14 +7,15 @@ import android.util.Log;
 import com.alibaba.android.arouter.facade.Postcard;
 import com.alibaba.android.arouter.facade.callback.NavigationCallback;
 import com.alibaba.android.arouter.launcher.ARouter;
-import com.example.myapplication.info.Test;
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final String TAG = "app_MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.work_activity_main);
 
         Log.d(getClass().getName(),"wait for flip test activity.");
 
@@ -25,7 +26,27 @@ public class MainActivity extends AppCompatActivity {
                 super.run();
 
                 //1. 应用类 简单的跳转
-                ARouter.getInstance().build("/work/main").navigation();
+                ARouter.getInstance().build("/work/main").navigation(MainActivity.this, new NavigationCallback() {
+                    @Override
+                    public void onFound(Postcard postcard) {
+                        Log.d(TAG,"onFound : "+postcard.toString());
+                    }
+
+                    @Override
+                    public void onLost(Postcard postcard) {
+                        Log.d(TAG,"onLost : "+postcard.toString());
+                    }
+
+                    @Override
+                    public void onArrival(Postcard postcard) {
+                        Log.d(TAG,"onArrival : "+postcard.toString());
+                    }
+
+                    @Override
+                    public void onInterrupt(Postcard postcard) {
+                        Log.d(TAG,"onInterrupt : "+postcard.toString());
+                    }
+                });
 
       /*          //2. 携带参数跳转
                 ARouter.getInstance().build("/test/activity")

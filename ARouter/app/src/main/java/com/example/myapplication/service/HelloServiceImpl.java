@@ -4,7 +4,7 @@ import android.content.Context;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.example.basemodule.service.HelloService;
 
-@Route(path = "test/server/hello", name = "hello")
+@Route(path = "/server/hello", name = "hello")
 public class HelloServiceImpl implements HelloService {
 
     @Override

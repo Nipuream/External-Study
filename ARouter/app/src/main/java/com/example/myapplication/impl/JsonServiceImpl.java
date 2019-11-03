@@ -8,7 +8,7 @@ import com.alibaba.fastjson.JSON;
 
 import java.lang.reflect.Type;
 
-@Route(path = "/test_server/json")
+@Route(path = "/parse/json")
 public class JsonServiceImpl implements SerializationService {
 
     @Override
