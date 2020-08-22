@@ -4,7 +4,7 @@
 
 router 是为了方便车机交互组同事快速开发完成定制项目需求的一套组件化路由方案，整体项目架构设计如下：
 
-![router整体架构图](imgs/router_all.png)
+![router整体架构图](router/imgs/router_all.png)
 
 这些组件的作用如下：
 
@@ -29,13 +29,13 @@ router 是为了方便车机交互组同事快速开发完成定制项目需求�
 
 在公司服务器环境下在宿主app的路径下执行此命令，可动态生成各接口路由表，所有接口的md文档，如图所示：
 
-![路由表路径](imgs/router_table.png)
+![路由表路径](router/imgs/router_table.png)
 
 通过路由表可快速了解组件接口的调用方式和入参，返回值等信息。
 
 也可通过安装android studio 插件阅读md文档，如果使用window环境下的Typora软件可方便转为pdf文档阅读：
 
-![pdf阅读](imgs/pdf_read.jpg)
+![pdf阅读](router/imgs/pdf_read.jpg)
 
 从文档上，我们可方便的知道应该调用 IRecorder接口的imageRetrive方法就可以完成根据时间范围检索图片文件的业务场景，入参和返回类型也一目了然。
 
@@ -123,7 +123,7 @@ public class ProtocolApp extends RouterApp {
 
 生成的dex文件路径：
 
-![dex_create](imgs/dex_create.jpg)
+![dex_create](router/imgs/dex_create.jpg)
 
 在调试过程中，只要在window环境下双击install_dex.bat，然后重启应用即可完成更新组件，在打包的过程中，需要将dex组件置于系统镜像中，然后应用动态加载。
 
@@ -155,7 +155,7 @@ HikRouter.installDb();
 
 如果想要在此宿主app中创建数据库，并维护数据，调用此方法。需要注意的是，此宿主app必须在清单文件中注明 DataProvider，然后其他任何地方，任何进程想要获取数据均可通过路由表和data组件提供的方法获取。
 
-![数据组件路由表](imgs/data_router.jpg)
+![数据组件路由表](router/imgs/data_router.jpg)
 
 调用方式：
 
@@ -280,8 +280,5 @@ public interface IRecorder {
 
 ## 作者？
 
-海康汽车电子业务中心\后装事业部\产品开发二部\车载交互开发组\定制开发组
+海康汽车电子业务中心\后装事业部\产品开发二部\车载交互开发组\yanghui11@hikvision.com
 
-- yanghui11@hikvision.com.cn
-- xuzhixiu@hikvision.com.cn
-- longtao@hikvision.com.cn
