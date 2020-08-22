@@ -1,0 +1,86 @@
+apply plugin: 'com.android.library'
+apply plugin: 'org.greenrobot.greendao'
+
+android {
+    compileSdkVersion rootProject.ext.android.compileSdkVersion
+    buildToolsVersion rootProject.ext.android.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion rootProject.ext.android.minSdkVersion
+        targetSdkVersion rootProject.ext.android.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+
+    afterEvaluate {
+        if(project.hasProperty("assembleRelease")){
+            assembleRelease.doLast {
+                println "======== create router dir, include business sence define. =============="
+                createRouterFile.execute()
+                println "======== create md file ==============="
+                createMd.execute()
+                println "======== create dex file ==============="
+                createDex.execute()
+            }
+        }
+    }
+}
+
+greendao {
+    schemaVersion 9
+    daoPackage "com.hikvision.auto.router.dao"
+    targetGenDir "src/main/java"
+}
+
+dependencies {
+    compile fileTree(dir: "libs", include: ["*.jar"])
+    compile rootProject.ext.dependencies["appcompat-v7"]
+    compile files('libs/hiksystemsdk.jar')
+    compile 'junit:junit:4.12'
+    compile 'com.android.support.test:runner:1.0.2'
+    compile 'com.android.support.test.espresso:espresso-core:3.0.2'
+    compile 'org.greenrobot:greendao:3.0.1'
+    compile rootProject.ext.dependencies["fastjson"]
+    compile 'io.reactivex.rxjava2:rxjava:2.1.0'
+    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    compile files('libs/apt_process.jar')
+    compile files('libs/hikutils.jar')
+//    compile project(':apt_process')
+}
+
+task createRouterFile(type: Copy) {
+    delete 'router/'
+    from('build/generated/source/apt/release/')
+    into('router/')
+}
+
+task createMd(type: Exec){
+    commandLine "./create_md"
+}
+
+task createDex(type: Exec){
+    commandLine "./create_dex.sh"
+}
+
+createRouterFile.dependsOn(build)
+//在终端执行生成JAR包
+// gradlew makeJar
