@@ -60,4 +60,7 @@ public class MainActivity extends AppCompatActivity {
 
     //使用native window 显示bitmap
     public native void showBitmap();
+
+    //使用 opengl es + surface 实现播放yuv数据
+    public native void playYUV(String path);
 }

@@ -1,7 +1,4 @@
 #include <jni.h>
-#include <string>
-#include <android/native_window_jni.h>
-#include <android/bitmap.h>
 #include "include/base.h"
 
 ANativeWindow* nativeWindow;
@@ -12,6 +9,17 @@ Java_com_nipuream_audiovideo_MainActivity_stringFromJNI(
         jobject /* this */) {
     std::string hello = "Hello from C++";
     return env->NewStringUTF(hello.c_str());
+}
+
+extern "C" JNIEXPORT void JNICALL
+Java_com_nipuream_audiovideo_MainActivity_playYUV(
+        JNIEnv* env,
+        jobject instance,
+        jstring jstr){
+
+    const char* path = env->GetStringUTFChars(jstr, 0);
+    pthread_t  pid;
+    pthread_create(&pid, NULL, readYUVWithOpenGl, (void *)path);
 }
 
 extern "C" JNIEXPORT void JNICALL
@@ -45,37 +53,7 @@ Java_com_nipuream_audiovideo_MainActivity_showBitmap(
         return ;
     }
 
-    int h = info.height;
-    int w = info.width;
-
-    LOGI("look bitmap information h : %d , w : %d", h, w);
-    //process bitmap.
-
-    ANativeWindow_setBuffersGeometry(nativeWindow, w, h, WINDOW_FORMAT_RGBA_8888);
-
-    ANativeWindow_Buffer buffer;
-    if(ANativeWindow_lock(nativeWindow, &buffer, 0)){
-        ANativeWindow_release(nativeWindow);
-        nativeWindow = 0;
-        return ;
-    }
-
-    LOGI("bufferwidth : %d, bufferStride : %d", buffer.width, buffer.stride);
-    if(buffer.width >= buffer.stride){
-        memcpy(buffer.bits, addr, h * w * 4);
-    } else {
-        //4字节对齐
-        auto dst_bits = static_cast<uint8_t *>(buffer.bits);
-        auto source_bits = static_cast<uint8_t *>(addr);
-
-        for(int i = 0; i < h; i++){
-            memcpy(dst_bits + buffer.stride * i * 4, source_bits + w * i * 4, w * 4);
-        }
-    }
-
-
-    ANativeWindow_unlockAndPost(nativeWindow);
-    //unlock everythings.
+    loadImage(addr, info);
     AndroidBitmap_unlockPixels(env, bitmapNative);
 }
 
@@ -94,4 +72,10 @@ Java_com_nipuream_audiovideo_MainActivity_setSurface(
     }
 
     nativeWindow = ANativeWindow_fromSurface(env, surface);
+}
+
+void* readYUVWithOpenGl(void *pVoid){
+    const char* path = reinterpret_cast<const char*>(pVoid);
+    drawWithOpenGl(path);
+    return 0;
 }
