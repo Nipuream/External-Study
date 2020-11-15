@@ -21,7 +21,10 @@
 
 
 
+//使用 native 直接显示bitmap
 void loadImage(void* addr, AndroidBitmapInfo& info);
+
+
 void drawWithOpenGl(const char* path);
 void* readYUVWithOpenGl(void *pVoid);
 

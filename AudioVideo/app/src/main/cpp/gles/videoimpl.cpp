@@ -178,7 +178,9 @@ void drawWithOpenGl(const char* path){
         return ;
     }
 
+    //顶灯着色器
     GLint vsh = initShader(vertexShader, GL_VERTEX_SHADER);
+    //片元着色器
     GLint fsh = initShader(fragYUV420P, GL_FRAGMENT_SHADER);
 
     //创建渲染程序
@@ -321,6 +323,11 @@ void drawWithOpenGl(const char* path){
                         GL_UNSIGNED_BYTE,
                         buf[2]);
 
+        /**
+         * 1. GL_POINT 以点的形式绘制，通常在在绘制粒子效果的场景中
+         * 2. GL_LINES 以线的形式绘制，通常在绘制直线的场景中
+         * 3. GL_TRIANGLE_STRIP 以三角形的形式进行绘制，所有的二维图像的渲染都会使用这种方式
+         */
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
         //窗口显示，交换双缓存区
         eglSwapBuffers(display, winSurface);

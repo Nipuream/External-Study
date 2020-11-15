@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".capture.CaptureActivity">
+
+
+    <SurfaceView
+        android:id="@+id/capture_surfaceView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
+    <Button
+        android:id="@+id/preview1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="preview1"
+        android:onClick="preview1"
+        />
+
+
+    <Button
+        android:id="@+id/preview2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="preview2"
+        android:onClick="preview2"
+        app:layout_constraintLeft_toRightOf="@+id/preview1"
+        />
+
+    <Button
+        android:id="@+id/stop_capture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="stopCapture"
+        android:onClick="stopCapture"
+        app:layout_constraintLeft_toRightOf="@+id/preview2"
+        />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

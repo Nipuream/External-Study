@@ -27,7 +27,6 @@ Java_com_nipuream_audiovideo_MainActivity_showBitmap(
         JNIEnv* env,
         jobject instace
 ){
-
     jclass  clazz = env->FindClass("com/nipuream/audiovideo/MainActivity");
     jfieldID  bitmapJava = env->GetFieldID(clazz,"bitmap", "Landroid/graphics/Bitmap;");
     jobject  bitmapNative = env->GetObjectField(instace, bitmapJava);

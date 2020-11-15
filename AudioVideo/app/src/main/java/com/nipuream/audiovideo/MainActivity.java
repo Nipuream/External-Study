@@ -2,12 +2,15 @@ package com.nipuream.audiovideo;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
+import com.nipuream.audiovideo.capture.CaptureActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -18,6 +21,8 @@ public class MainActivity extends AppCompatActivity {
 
     SurfaceView surfaceView;
     Bitmap bitmap;
+    SurfaceHolder surfaceHolder = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,17 +30,29 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
-        Log.i("yanghui", "bitmap size : "+ bitmap.getByteCount());
+        Log.i("yanghui", "bitmap size : " + bitmap.getByteCount());
         surfaceView = findViewById(R.id.surfaceView);
         surfaceView.getHolder().addCallback(new SurfaceCallback());
+    }
+
+    public void flipCapture(View view) {
+        Intent intent = new Intent(this, CaptureActivity.class);
+        startActivity(intent);
+    }
+
+    public void playYUVwithGl(View view) {
+        playYUV("/sdcard/Android/yanghui.yuv");
     }
 
     private final class SurfaceCallback implements SurfaceHolder.Callback {
 
         @Override
         public void surfaceCreated(SurfaceHolder surfaceHolder) {
+
+            MainActivity.this.surfaceHolder = surfaceHolder;
             setSurface(surfaceHolder.getSurface());
-            showBitmap();
+//            showBitmap();
+
         }
 
         @Override
@@ -48,6 +65,9 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
+
+
+
 
     /**
      * A native method that is implemented by the 'native-lib' native library,

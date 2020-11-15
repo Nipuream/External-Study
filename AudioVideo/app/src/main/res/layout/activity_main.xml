@@ -9,8 +9,27 @@
 
     <SurfaceView
         android:id="@+id/surfaceView"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         tools:ignore="MissingConstraints" />
+
+
+    <Button
+        android:id="@+id/flipCapture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="flipCapture"
+        android:onClick="flipCapture"
+        />
+
+    <Button
+        android:id="@+id/playYUVwithGl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="playYUVwithGl"
+        android:onClick="playYUVwithGl"
+        app:layout_constraintLeft_toRightOf="@+id/flipCapture"
+        />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
