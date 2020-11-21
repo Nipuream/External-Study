@@ -66,8 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
             MainActivity.this.surfaceHolder = surfaceHolder;
             setSurface(surfaceHolder.getSurface());
-//            showBitmap();
-
+            showBitmap();
         }
 
         @Override

@@ -69,7 +69,7 @@ static const char* fragYUV420P = GET_STR(
                     1.0,1.0,1.0,
                     0.0,-0.39465,2.03211,
                     1.13983,-0.5806,0.0
-                    ) * yuv;
+            ) * yuv;
             //gl_FragColor 是Opengl内置的
             gl_FragColor = vec4(rgb, 1.0);
         }
@@ -85,9 +85,10 @@ void loadImage(void* addr, AndroidBitmapInfo& info){
     int w = info.width;
 
     LOGI("look bitmap information h : %d , w : %d", h, w);
+    LOGI("bitmap info.stride:%d, info.width:%d, info.height : %d", info.stride, info.width, info.height);
     //process bitmap.
 
-    ANativeWindow_setBuffersGeometry(nativeWindow, w, h, WINDOW_FORMAT_RGBA_8888);
+    ANativeWindow_setBuffersGeometry(nativeWindow, 0, 0, WINDOW_FORMAT_RGBA_8888);
 
     ANativeWindow_Buffer buffer;
     if(ANativeWindow_lock(nativeWindow, &buffer, 0)){
@@ -97,16 +98,11 @@ void loadImage(void* addr, AndroidBitmapInfo& info){
     }
 
     LOGI("bufferwidth : %d, bufferStride : %d", buffer.width, buffer.stride);
-    if(buffer.width >= buffer.stride){
-        memcpy(buffer.bits, addr, h * w * 4);
-    } else {
-        //4字节对齐
-        auto dst_bits = static_cast<uint8_t *>(buffer.bits);
-        auto source_bits = static_cast<uint8_t *>(addr);
+    auto dst_bits = static_cast<uint8_t *>(buffer.bits);
+    auto source_bits = static_cast<uint8_t *>(addr);
 
-        for(int i = 0; i < h; i++){
-            memcpy(dst_bits + buffer.stride * i * 4, source_bits + w * i * 4, w * 4);
-        }
+    for(int i = 0; i < h; i++){
+        memcpy(dst_bits + buffer.stride * (i+150) * 4, source_bits + w * i * 4, w * 4);
     }
 
     ANativeWindow_unlockAndPost(nativeWindow);
@@ -275,15 +271,15 @@ void drawWithOpenGl(const char* path){
     //当前绑定的纹理对象就会被附加上纹理图像
     //width,height 表示第几个像素共用一个yuv元素?
     glTexImage2D(GL_TEXTURE_2D,
-            0,
-            GL_LUMINANCE,//gpu内部格式 亮度，灰度图（这里就是只取一个亮度的颜色通道的意思)
-            width,
-            height,
-            0, //纹理边框
-            GL_LUMINANCE, //数据的像素格式 亮度 灰度图
-            GL_UNSIGNED_BYTE, //像素点存储的数据类型
-            NULL //纹理的数据（先不传)
-            );
+                 0,
+                 GL_LUMINANCE,//gpu内部格式 亮度，灰度图（这里就是只取一个亮度的颜色通道的意思)
+                 width,
+                 height,
+                 0, //纹理边框
+                 GL_LUMINANCE, //数据的像素格式 亮度 灰度图
+                 GL_UNSIGNED_BYTE, //像素点存储的数据类型
+                 NULL //纹理的数据（先不传)
+    );
 
     //绑定纹理
     glBindTexture(GL_TEXTURE_2D, texts[1]);
