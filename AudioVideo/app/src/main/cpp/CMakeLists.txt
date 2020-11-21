@@ -58,10 +58,25 @@ message("log path : ${log-lib}")
 #添加头文件
 include_directories(${CMAKE_SOURCE_DIR}/include)
 
+
+
+# =========================================  libyuv =====================================
+
+include_directories(${CMAKE_SOURCE_DIR}/libyuv/include)
+
+set(LIBYUV ${CMAKE_SOURCE_DIR}/libyuv/src)
+file(GLOB ALL_CPP_YUV ${LIBYUV}/*.cc)
+add_library(
+        yuv-lib
+        SHARED
+        ${ALL_CPP_YUV}
+)
+
+
 #链接库
 target_link_libraries( # Specifies the target library.
                        native-lib
-
+                       yuv-lib
                        OpenSLES
                        EGL
                        GLESv2

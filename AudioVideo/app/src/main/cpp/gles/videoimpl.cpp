@@ -18,9 +18,11 @@ EGLContext context;
 pthread_mutex_t  mutex = PTHREAD_MUTEX_INITIALIZER; // 互斥锁
 bool isPlay = false;
 
-int width = 640;
-int height = 272;
+//const int width = 480;
+//const int height = 640;
 
+const int width = 640;
+const int height = 480;
 
 //顶点着色器，每个顶点执行一次，可以并行执行
 #define GET_STR(x) #x
@@ -121,7 +123,7 @@ void drawWithOpenGl(const char* path){
     isPlay = true;
 
 
-    //1.获取display
+    //1.获取display EGLDisplay是一个封装系统物理屏幕的数据类型(可以理解成为绘制目标的一个抽象)
     display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
     if(display == EGL_NO_DISPLAY){
         LOGD("egl display failed.");
@@ -135,12 +137,17 @@ void drawWithOpenGl(const char* path){
     }
 
     //3.确定可用的渲染表面(surface)的配置
+    //一旦EGL有了display之后，它就可以将OpenGl es的输出和设备桥接起来，但是需要指定一些配置项，类似于色彩格式、像素格式、RGBA的表示
+    //以及SurfaceType等，不同的系统以及平台使用EGL的标准是不同的
     EGLConfig eglConfig;
     EGLint configNum;
     EGLint configSpec[] = {
+            EGL_BUFFER_SIZE, 32,
+            EGL_ALPHA_SIZE, 8,
             EGL_RED_SIZE, 8,
             EGL_GREEN_SIZE, 8,
             EGL_BLUE_SIZE, 8,
+            EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
             EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
             EGL_NONE
     };
@@ -150,8 +157,20 @@ void drawWithOpenGl(const char* path){
         return;
     }
 
+
+
+//    EGLint format;
+//    LOGI("format : %d", format);
+//    if(!eglGetConfigAttrib(display,eglConfig,EGL_NATIVE_VISUAL_ID, &format)){
+//        LOGE("eglGetConfigAttrib() returned error %d ", eglGetError());
+//        return ;
+//    }
+//
+//    ANativeWindow_setBuffersGeometry(nativeWindow,width,height,WINDOW_FORMAT_RGBA_8888);
+
     //4.创建渲染表面 surface
     //创建surface (egl 和 NativeWindow 进行关联，最后一个参数为属性信息，0表示默认版本)
+    //这个创建出来的Surface是个可以实际显示的Surface
     winSurface = eglCreateWindowSurface(display, eglConfig, nativeWindow, 0);
     if(winSurface == EGL_NO_SURFACE){
         LOGD("eglCreateWindowSurface failed");
@@ -169,6 +188,7 @@ void drawWithOpenGl(const char* path){
         LOGD("eglCreateContext failed");
         return ;
     }
+
 
     //6.指定某个EGLContext 为当前上下文，关联起来
     //egl 和 opengl 关联
@@ -226,6 +246,7 @@ void drawWithOpenGl(const char* path){
             1.0f,1.0f,
             0.0f,1.0f
     };
+
     GLuint aTex = static_cast<GLuint>(glGetAttribLocation(program, "aTextCoord"));
     glEnableVertexAttribArray(aTex);
     glVertexAttribPointer(aTex, 2, GL_FLOAT, GL_FALSE, 0, fragment);
@@ -274,6 +295,22 @@ void drawWithOpenGl(const char* path){
                  0,//细节基本 默认0
                  GL_LUMINANCE,//gpu内部格式 亮度，灰度图（这里就是只取一个颜色通道的意思）
                  width / 2,
+                 height / 2,//u数据数量为屏幕的4分之1
+                 0,//边框
+                 GL_LUMINANCE,//数据的像素格式 亮度，灰度图
+                 GL_UNSIGNED_BYTE,//像素点存储的数据类型
+                 NULL //纹理的数据（先不传）
+    );
+
+    glBindTexture(GL_TEXTURE_2D, texts[2]);
+    //缩小的过滤器
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    //设置纹理的格式和大小
+    glTexImage2D(GL_TEXTURE_2D,
+                 0,//细节基本 默认0
+                 GL_LUMINANCE,//gpu内部格式 亮度，灰度图（这里就是只取一个颜色通道的意思）
+                 width / 2,
                  height / 2,//v数据数量为屏幕的4分之1
                  0,//边框
                  GL_LUMINANCE,//数据的像素格式 亮度，灰度图
@@ -306,7 +343,16 @@ void drawWithOpenGl(const char* path){
 
         //激活第一层纹理，绑定到创建的纹理
         glActiveTexture(GL_TEXTURE0);
+        //绑定y对应的纹理
+        glBindTexture(GL_TEXTURE_2D, texts[0]);
+        //替换纹理，比重新使用glTexImage2D性能高多
+        glTexSubImage2D(GL_TEXTURE_2D, 0,
+                        0, 0,//相对原来的纹理的offset
+                        width, height,//加载的纹理宽度、高度。最好为2的次幂
+                        GL_LUMINANCE, GL_UNSIGNED_BYTE,
+                        buf[0]);
 
+        glActiveTexture(GL_TEXTURE1);
         //绑定y对应的纹理
         glBindTexture(GL_TEXTURE_2D, texts[1]);
         //替换纹理，比重新使用glTextImage2D性能高

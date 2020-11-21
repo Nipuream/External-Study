@@ -61,10 +61,7 @@ public class CaptureActivity extends AppCompatActivity {
         } else {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
         }
-
     }
-
-
 
     private void setupCamera2(final int width, final int height) {
 
@@ -92,20 +89,26 @@ public class CaptureActivity extends AppCompatActivity {
                         return ;
                     }
 
-
+                    /**
+                     * 代表yuv分量
+                     * pixelStride 表示偏移量
+                     * rowStride 判断Y分量是否有无效数据
+                     */
                     Image.Plane[] planes = image.getPlanes();
 
-                    //plane.pixelStride : 1, rowStride : 1472, width : 1440, height : 1080, buffer.size : 1589728
-                    //plane.pixelStride : 2, rowStride : 1472, width : 1440, height : 1080, buffer.size : 794847
-                    //plane.pixelStride : 2, rowStride : 1472, width : 1440, height : 1080, buffer.size : 794847
-//                    for(Image.Plane plane : planes){
-//                        Log.i("yanghui","plane.pixelStride : "+ plane.getPixelStride() + ", rowStride : " + plane.getRowStride() + ", width : "+ image.getWidth() + ", height : "+ image.getHeight() + ", buffer.size : " + plane.getBuffer().remaining());
-//                    }
+//plane.pixelStride : 1, rowStride : 512, width : 480, height : 640, buffer.size : 327648
+//plane.pixelStride : 2, rowStride : 512, width : 480, height : 640, buffer.size : 163807
+//plane.pixelStride : 2, rowStride : 512, width : 480, height : 640, buffer.size : 163807
+
+                    byte[] i420bytes = null;
+                    try{
+                        i420bytes = CameraUtil.getBytes_final(image);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
 
 
-                    byte[] i420bytes = CameraUtil.getDataFromImage(image, CameraUtil.COLOR_FormatI420);
-//                    byte[] i420RotateBytes = ImageUtil.rotateYUV420Degree90(i420bytes,width, height);
-                    if(fileOutputStream != null){
+                    if(fileOutputStream != null && i420bytes != null){
                         try {
                             fileOutputStream.write(i420bytes,0, i420bytes.length);
                             Log.i("yanghui","write to file size : "+ i420bytes.length);
@@ -169,6 +172,7 @@ public class CaptureActivity extends AppCompatActivity {
             // 将SurfaceView的surface作为CaptureRequest.Builder的目标
             previewRequestBuilder.addTarget(surfaceHolder.getSurface());
             previewRequestBuilder.addTarget(mImageReader.getSurface());
+
             // 创建CameraCaptureSession，该对象负责管理处理预览请求和拍照请求
             mCameraDevice.createCaptureSession(Arrays.asList(surfaceHolder.getSurface(), mImageReader.getSurface()), new CameraCaptureSession.StateCallback() {
 

@@ -12,12 +12,16 @@ import android.view.SurfaceView;
 import android.view.View;
 import com.nipuream.audiovideo.capture.CaptureActivity;
 
+import java.io.File;
+
 public class MainActivity extends AppCompatActivity {
 
     // Used to load the 'native-lib' library on application startup.
     static {
         System.loadLibrary("native-lib");
     }
+
+    private static final String TAG = "MainActivity";
 
     SurfaceView surfaceView;
     Bitmap bitmap;
@@ -41,7 +45,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void playYUVwithGl(View view) {
-        playYUV("/sdcard/Android/yanghui.yuv");
+
+        File dir = getExternalCacheDir();
+        File file = new File(dir, "yanghui.yuv");
+
+        if(!file.exists()){
+            Log.i(TAG,"file is not exits.");
+            return ;
+        } else {
+            Log.i(TAG,"file path : "+ file.getPath() + ", start play yuv.");
+        }
+
+        NativeLib.playYUV(file.getPath());
     }
 
     private final class SurfaceCallback implements SurfaceHolder.Callback {
@@ -67,20 +82,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-
-    /**
-     * A native method that is implemented by the 'native-lib' native library,
-     * which is packaged with this application.
-     */
-    public native String stringFromJNI();
-
     //将surface传递到native层
     public native void setSurface(Object surface);
 
     //使用native window 显示bitmap
     public native void showBitmap();
 
-    //使用 opengl es + surface 实现播放yuv数据
-    public native void playYUV(String path);
+
 }
