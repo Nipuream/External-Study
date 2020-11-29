@@ -9,8 +9,9 @@
 #include <android/native_window_jni.h>
 #include <android/bitmap.h>
 #include <string>
-#include <pthread.h>
+#include "audio_encoder.h"
 
+#include <pthread.h>
 #define TAG "AudioVideo"
 
 #define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG,TAG,__VA_ARGS__)

@@ -2,6 +2,7 @@
 #include "include/base.h"
 #include <libyuv.h>
 
+
 ANativeWindow* nativeWindow;
 
 extern "C" JNIEXPORT jstring JNICALL

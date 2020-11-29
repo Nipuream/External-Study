@@ -72,6 +72,19 @@ add_library(
         ${ALL_CPP_YUV}
 )
 
+# ======================================== ffmpeg ========================================
+
+include_directories(${CMAKE_SOURCE_DIR}/ffmpeg/include/libavcodec
+                    ${CMAKE_SOURCE_DIR}/ffmpeg/include/libavfilter
+                    ${CMAKE_SOURCE_DIR}/ffmpeg/include/libavformat
+                    ${CMAKE_SOURCE_DIR}/ffmpeg/include/libavutil
+                    ${CMAKE_SOURCE_DIR}/ffmpeg/include/libpostproc
+                    ${CMAKE_SOURCE_DIR}/ffmpeg/include/libswresample
+                    ${CMAKE_SOURCE_DIR}/ffmpeg/include/libswscale)
+
+set(PATH_TO_PRE_BUILT ${CMAKE_SOURCE_DIR}/ffmpeg/prebuilt)
+
+
 
 #链接库
 target_link_libraries( # Specifies the target library.
@@ -82,6 +95,19 @@ target_link_libraries( # Specifies the target library.
                        GLESv2
                        android
                        jnigraphics
+
+                       # 引入ffmpeg相关静态库
+                       ${PATH_TO_PRE_BUILT}/libavfilter.a
+                       ${PATH_TO_PRE_BUILT}/libavformat.a
+                       ${PATH_TO_PRE_BUILT}/libavcodec.a
+                       ${PATH_TO_PRE_BUILT}/libpostproc.a
+                       ${PATH_TO_PRE_BUILT}/libswresample.a
+                       ${PATH_TO_PRE_BUILT}/libswscale.a
+                       ${PATH_TO_PRE_BUILT}/libavutil.a
+                       ${PATH_TO_PRE_BUILT}/libpostproc.a
+                       ${PATH_TO_PRE_BUILT}/libfdk-aac.a
+                       ${PATH_TO_PRE_BUILT}/libvo-aacenc.a
+                       ${PATH_TO_PRE_BUILT}/libx264.a
 
                        # Links the target library to the log library
                        # included in the NDK.
