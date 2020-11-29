@@ -16,20 +16,31 @@
 
     <Button
         android:id="@+id/flipCapture"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="flipCapture"
         android:onClick="flipCapture"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="5dp"
         />
 
     <Button
         android:id="@+id/playYUVwithGl"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="playYUVwithGl"
         android:onClick="playYUVwithGl"
-        app:layout_constraintLeft_toRightOf="@+id/flipCapture"
+        app:layout_constraintTop_toBottomOf="@+id/flipCapture"
+        android:layout_marginTop="5dp"
         />
+
+    <Button
+        android:id="@+id/record_audio"
+        android:layout_width="match_parent"
+        android:onClick="recordAudio"
+        android:text="recordAudio"
+        app:layout_constraintTop_toBottomOf="@+id/playYUVwithGl"
+        android:layout_height="wrap_content" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

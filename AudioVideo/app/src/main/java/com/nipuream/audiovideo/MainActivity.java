@@ -10,6 +10,8 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+
+import com.nipuream.audiovideo.audio.AudioProcessActivity;
 import com.nipuream.audiovideo.capture.CaptureActivity;
 
 import java.io.File;
@@ -57,6 +59,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
         NativeLib.playYUV(file.getPath());
+    }
+
+    public void recordAudio(View view) {
+        startActivity(new Intent(this, AudioProcessActivity.class));
     }
 
     private final class SurfaceCallback implements SurfaceHolder.Callback {
