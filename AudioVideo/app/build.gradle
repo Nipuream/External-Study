@@ -1,18 +1,22 @@
 apply plugin: 'com.android.application'
 
+ext {
+    native_sdk_path = rootDir.getAbsolutePath().replace('\\','/') + "/app"
+    println("native_sdk_path : ${native_sdk_path}")
+}
+
 android {
     compileSdkVersion 29
 
     defaultConfig {
         applicationId "com.nipuream.audiovideo"
-        minSdkVersion 21
+        minSdkVersion 18
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         ndk {
-//            abiFilters "arm64-v8a", "armeabi-v7a", "x86", "x86_64"
             abiFilters "armeabi-v7a"
         }
     }
@@ -25,12 +29,30 @@ android {
     }
 
     buildTypes {
+
+//        debug {
+//            debuggable true
+//            jniDebuggable true
+//
+//            externalNativeBuild {
+//                cmake {
+//                    arguments '-DANDROID_PLATFORM=android-17', '-DANDROID_TOOLCHAIN=clang',
+//                            '-DANDROID_STL=gnustl_static',
+//                            "-DPATH_TO_MEDIACORE:STRING=${native_sdk_path}"
+//                    cFlags '-O3', '-DGL_GLEXT_PROTOTYPES', '-DEGL_EGLEXT_PROTOTYPES', '-fsigned-char', "-I${native_sdk_path}", '-Wformat','-mfpu=neon', '-mfloat-abi=softfp -frtti' // full optimization, char data type is signed
+//                    // 编译优化，设置函式是否能被 inline 的伪指令长度
+//                    cppFlags '-O3', '-fexceptions', '-fsigned-char', "-frtti" , '-Wformat'
+//                }
+//            }
+//        }
+
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 }
+
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])

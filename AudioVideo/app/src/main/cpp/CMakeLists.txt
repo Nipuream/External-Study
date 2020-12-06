@@ -12,6 +12,7 @@ set(OpenGL ${CMAKE_SOURCE_DIR}/gles)
 
 #批量添加 cpp 文件
 file(GLOB ALL_CPP ${OpenSL}/*.cpp ${OpenGL}/*.cpp)
+file(GLOB ALL_AUDIO_ENCODER_CPP ${CMAKE_SOURCE_DIR}/process/*.cpp)
 
 #将cpp 生成动态库
 #add_library(audiovideo SHARED ${ALL_CPP})
@@ -30,6 +31,7 @@ add_library( # Sets the name of the library.
              SHARED
 
              ${ALL_CPP}
+             ${ALL_AUDIO_ENCODER_CPP}
 
              # Provides a relative path to your source file(s).
              native-lib.cpp )
@@ -40,15 +42,15 @@ add_library( # Sets the name of the library.
 # you want to add. CMake verifies that the library exists before
 # completing its build.
 
-#系统添加 ndk log 库
-find_library( # Sets the name of the path variable.
-              log-lib
+##系统添加 ndk log 库
+#find_library( # Sets the name of the path variable.
+#              log-lib
+#
+#              # Specifies the name of the NDK library that
+#              # you want CMake to locate.
+#              log )
 
-              # Specifies the name of the NDK library that
-              # you want CMake to locate.
-              log )
 
-message("log path : ${log-lib}")
 
 # Specifies libraries CMake should link to your target library. You
 # can link multiple libraries, such as libraries you define in this
@@ -74,41 +76,69 @@ add_library(
 
 # ======================================== ffmpeg ========================================
 
-include_directories(${CMAKE_SOURCE_DIR}/ffmpeg/include/libavcodec
+include_directories(${CMAKE_SOURCE_DIR}/ffmpeg/include/
+                    ${CMAKE_SOURCE_DIR}/ffmpeg/include/libavcodec
                     ${CMAKE_SOURCE_DIR}/ffmpeg/include/libavfilter
                     ${CMAKE_SOURCE_DIR}/ffmpeg/include/libavformat
                     ${CMAKE_SOURCE_DIR}/ffmpeg/include/libavutil
-                    ${CMAKE_SOURCE_DIR}/ffmpeg/include/libpostproc
                     ${CMAKE_SOURCE_DIR}/ffmpeg/include/libswresample
-                    ${CMAKE_SOURCE_DIR}/ffmpeg/include/libswscale)
+                    ${CMAKE_SOURCE_DIR}/ffmpeg/include/libswscale
+                    ${CMAKE_SOURCE_DIR}/ffmpeg/include/libpostproc
+)
 
 set(PATH_TO_PRE_BUILT ${CMAKE_SOURCE_DIR}/ffmpeg/prebuilt)
 
+message("PREBUILT ${PATH_TO_PRE_BUILT}")
+
+
+#==================================== audio_encoder  =====================================
+
+#file(GLOB ALL_AUDIO_ENCODER_CPP ${CMAKE_SOURCE_DIR}/process/*.cpp)
+
+
+#add_library(
+#        audio_encode
+#        SHARED
+#        ${ALL_AUDIO_ENCODER_CPP}
+#)
 
 
 #链接库
 target_link_libraries( # Specifies the target library.
                        native-lib
+
+
+
+
                        yuv-lib
                        OpenSLES
                        EGL
                        GLESv2
+                       log
                        android
                        jnigraphics
+                       z
+                       m
+                       dl
+#                       audio_encode
 
-                       # 引入ffmpeg相关静态库
-                       ${PATH_TO_PRE_BUILT}/libavfilter.a
-                       ${PATH_TO_PRE_BUILT}/libavformat.a
-                       ${PATH_TO_PRE_BUILT}/libavcodec.a
-                       ${PATH_TO_PRE_BUILT}/libpostproc.a
-                       ${PATH_TO_PRE_BUILT}/libswresample.a
-                       ${PATH_TO_PRE_BUILT}/libswscale.a
-                       ${PATH_TO_PRE_BUILT}/libavutil.a
-                       ${PATH_TO_PRE_BUILT}/libpostproc.a
-                       ${PATH_TO_PRE_BUILT}/libfdk-aac.a
-                       ${PATH_TO_PRE_BUILT}/libvo-aacenc.a
-                       ${PATH_TO_PRE_BUILT}/libx264.a
+
+        #引入静态库 顺序不能弄错，否则会链接不上
+        ${PATH_TO_PRE_BUILT}/libavformat.a
+        ${PATH_TO_PRE_BUILT}/libavcodec.a
+        ${PATH_TO_PRE_BUILT}/libavfilter.a
+        ${PATH_TO_PRE_BUILT}/libavutil.a
+        ${PATH_TO_PRE_BUILT}/libswscale.a
+        ${PATH_TO_PRE_BUILT}/libpostproc.a
+        ${PATH_TO_PRE_BUILT}/libvo-aacenc.a
+        ${PATH_TO_PRE_BUILT}/libx264.a
+        ${PATH_TO_PRE_BUILT}/libfdk-aac.a
+        ${PATH_TO_PRE_BUILT}/libswresample.a
+
+
+
 
                        # Links the target library to the log library
                        # included in the NDK.
-                       ${log-lib} )
+#                       ${log-lib}
+)

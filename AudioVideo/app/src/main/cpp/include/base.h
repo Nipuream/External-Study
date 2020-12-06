@@ -5,13 +5,15 @@
 #ifndef AUDIOVIDEO_BASE_H
 #define AUDIOVIDEO_BASE_H
 
+
 #include <android/log.h>
 #include <android/native_window_jni.h>
 #include <android/bitmap.h>
 #include <string>
 #include "audio_encoder.h"
-
 #include <pthread.h>
+
+
 #define TAG "AudioVideo"
 
 #define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG,TAG,__VA_ARGS__)

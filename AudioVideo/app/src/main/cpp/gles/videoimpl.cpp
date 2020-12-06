@@ -423,7 +423,7 @@ void release(){
 
         context = EGL_NO_CONTEXT;
         display = EGL_NO_SURFACE;
-        winSurface = nullptr;
+        winSurface = NULL;
         winSurface = 0;
         nativeWindow = 0;
         isPlay = false;

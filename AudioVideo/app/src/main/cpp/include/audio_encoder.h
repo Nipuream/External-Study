@@ -5,22 +5,30 @@
 #ifndef AUDIOVIDEO_AUDIO_ENCODER_H
 #define AUDIOVIDEO_AUDIO_ENCODER_H
 
+#ifdef __cplusplus
 extern "C" {
-#include <avcodec.h>
-#include <avformat.h>
-#include <avutil.h>
-#include <swresample.h>
-#include <samplefmt.h>
-#include <common.h>
-#include <channel_layout.h>
-#include <opt.h>
-#include <imgutils.h>
-#include <mathematics.h>
-};
+#endif
+
+#include <libavcodec/avcodec.h>
+#include <libavformat/avformat.h>
+#include <libavutil/avutil.h>
+#include <libswresample/swresample.h>
+#include <libavutil/samplefmt.h>
+#include <libavutil/channel_layout.h>
+#include <libavutil/opt.h>
+#include <libavutil/imgutils.h>
+#include <libavutil/mathematics.h>
+
+#ifdef __cplusplus
+} // endof extern "C"
+#endif
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include "common.h"
+
+
 
 class AudioEncoder {
 
@@ -65,13 +73,10 @@ public:
     virtual ~AudioEncoder();
 
     int init(int bitRate,int channels, int sampleRate, int bitsPerSample,const char* aacFilePath, const char* codec_name);
-    int init(int bitRate, int channels, int bitsPerSample, const char* aacFilePath, const char* codec_name);
+    void encode(byte* buffer, int size);
     void destroy();
 
 };
-
-
-#define PUBLISH_BYTE_RATE 64000
 
 
 
