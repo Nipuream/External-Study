@@ -107,9 +107,6 @@ message("PREBUILT ${PATH_TO_PRE_BUILT}")
 target_link_libraries( # Specifies the target library.
                        native-lib
 
-
-
-
                        yuv-lib
                        OpenSLES
                        EGL

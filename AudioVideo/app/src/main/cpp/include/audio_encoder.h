@@ -28,7 +28,9 @@ extern "C" {
 #include <time.h>
 #include "common.h"
 
-
+#ifndef PUBLISH_BITE_RATE
+#define PUBLISH_BITE_RATE 64000
+#endif
 
 class AudioEncoder {
 
@@ -52,7 +54,7 @@ private:
     uint8_t* swrBuffer;
     int swrBufferSize;
 
-    int pushlishBitRate;
+    int publishBitRate;
     int audioChannels;
     int audioSampleRate;
 
@@ -60,7 +62,7 @@ private:
     int totalEncodeTimeMills;
 
     //初始化的时候，要进行的工作
-    int alloc_acframe();
+    int alloc_avframe();
     int alloc_audio_stream(const char* codec_name);
     //当够了一个frame之后要编码一个packet
     void encodePacket();
@@ -72,12 +74,34 @@ public:
     AudioEncoder();
     virtual ~AudioEncoder();
 
+    /**
+     *
+     * @param bitRate  最终编码出来文件的码率
+     * @param channels 声道数
+     * @param sampleRate 采样率
+     * @param bitsPerSample 一帧多少字节
+     * @param aacFilePath 编码文件路径
+     * @param codec_name 编码器名字
+     * @return
+     */
     int init(int bitRate,int channels, int sampleRate, int bitsPerSample,const char* aacFilePath, const char* codec_name);
     void encode(byte* buffer, int size);
     void destroy();
 
 };
 
+
+
+/**
+ * 使用ffempeg编码aac
+ * @param pcmPath
+ * @param aacPath
+ * @param channels
+ * @param bitRate
+ * @param sampleRate
+ */
+void encodeAACUsingFFmpeg(const char* pcmPath, const char* aacPath,
+        int channels, int bitRate, int sampleRate);
 
 
 #endif //AUDIOVIDEO_AUDIO_ENCODER_H

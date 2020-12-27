@@ -8,16 +8,24 @@ import androidx.core.content.ContextCompat;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.media.AudioFormat;
+import android.media.AudioManager;
 import android.media.AudioRecord;
+import android.media.AudioTrack;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+
+import com.nipuream.audiovideo.NativeLib;
 import com.nipuream.audiovideo.R;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+
+import javax.security.auth.login.LoginException;
 
 
 public class AudioProcessActivity extends AppCompatActivity {
@@ -40,13 +48,12 @@ public class AudioProcessActivity extends AppCompatActivity {
     private AudioRecord audioRecord;
     //录音文件
     private File file = null;
-
     //是否暂停
     private boolean pause ;
-
     //是否已经开始录音
     private boolean start = false;
 
+    private boolean audioIsPlay = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,4 +146,71 @@ public class AudioProcessActivity extends AppCompatActivity {
         Log.i(TAG,"requestCode : "+ requestCode + ", permisssion : "+ Arrays.toString(permissions)
                 + ", grantResults : "+ Arrays.toString(grantResults));
     }
+
+    public void encodeAAC(View view) {
+
+        new Thread(){
+
+            @Override
+            public void run() {
+                super.run();
+                int bitRates = AUDIO_SAMPLE_RATE * 16 ;
+                NativeLib.encodeAAC("sdcard/Android/yanghui.pcm",
+                        1,bitRates,AUDIO_SAMPLE_RATE,"sdcard/Android/output.aac");
+                Log.i(TAG,"encode AAC end.");
+            }
+        }.start();
+    }
+
+
+    public void playPcm(View view) {
+
+        if(audioIsPlay){
+            Log.i(TAG,"audio is playing...");
+            return ;
+        }
+
+        audioIsPlay = true;
+        new Thread(){
+
+            @Override
+            public void run() {
+                super.run();
+
+                int bufferSize = AudioTrack.getMinBufferSize(AUDIO_SAMPLE_RATE, AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT);
+                AudioTrack audioTrack = new AudioTrack(AudioManager.STREAM_MUSIC, AUDIO_SAMPLE_RATE, AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT, bufferSize, AudioTrack.MODE_STREAM);
+                FileInputStream fis = null;
+                try {
+
+                    fis = new FileInputStream("/sdcard/Android/yanghui.pcm");
+                    audioTrack.play();
+
+                    byte[] buffer = new byte[bufferSize];
+                    int len = 0;
+                    while ((len = fis.read(buffer)) != -1){
+                        audioTrack.write(buffer, 0, len);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    if(fis != null){
+                        try {
+                            fis.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    if(audioTrack != null){
+                        audioTrack.stop();
+                        audioTrack = null;
+                    }
+                    audioIsPlay = false;
+                    Log.i(TAG,"audio play end ...");
+                }
+            }
+
+        }.start();
+
+    }
+
 }

@@ -188,3 +188,13 @@ void* readYUVWithOpenGl(void *pVoid){
     drawWithOpenGl(path);
     return 0;
 }
+
+extern "C" JNIEXPORT void JNICALL
+Java_com_nipuream_audiovideo_NativeLib_encodeAAC(JNIEnv* env, jclass clazz,jstring pcmPathParam,jint channels, jint bitRate, jint sampleRate, jstring aacPathParam){
+
+    const char* pcmPath = env->GetStringUTFChars(pcmPathParam, NULL);
+    const char* aacPath = env->GetStringUTFChars(aacPathParam, NULL);
+    encodeAACUsingFFmpeg(pcmPath, aacPath, channels, bitRate, sampleRate);
+    env->ReleaseStringUTFChars(aacPathParam, aacPath);
+    env->ReleaseStringUTFChars(pcmPathParam, pcmPath);
+}
