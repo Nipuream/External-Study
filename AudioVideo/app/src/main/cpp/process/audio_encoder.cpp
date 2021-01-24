@@ -53,7 +53,6 @@ int AudioEncoder::init(int bitRate, int channels, int sampleRate, int bitsPerSam
         return -1;
     }
 
-
     //传入AAC的编码路径，打开文件的连接通道
     if(ret = avio_open2(&avFormatContext->pb, aacFilePath, AVIO_FLAG_WRITE, NULL, NULL)){
         LOGI("could not avio open fail %s ", av_err2str(ret));
@@ -162,7 +161,6 @@ void AudioEncoder::addADTStoPacket(uint8_t *packet, int packetLen) {
     packet[4] = (unsigned char) ((packetLen & 0x7FF) >> 3);
     packet[5] = (unsigned char) (((packetLen & 7) << 5) + 0x1F);
     packet[6] = (unsigned char) 0xFC;
-
 }
 
 void AudioEncoder::writeAACPacketToFile(uint8_t *data, int datalen) {
@@ -182,6 +180,7 @@ int AudioEncoder::alloc_avframe() {
     AVSampleFormat preferedSampleFMT = AV_SAMPLE_FMT_S16;
     int preferedChannels = audioChannels;
     int preferedSampleRate = audioSampleRate;
+    //分配一个AVFrame类型的inputFrame，作为客户端输入的pcm数据存放的地方
     input_frame = av_frame_alloc();
 
     if(!input_frame){
@@ -193,10 +192,12 @@ int AudioEncoder::alloc_avframe() {
     input_frame->format = preferedSampleFMT;
     input_frame->channel_layout = preferedChannels == 1 ? AV_CH_LAYOUT_MONO : AV_CH_LAYOUT_STEREO;
     input_frame->sample_rate = preferedSampleRate;
+    //计算出 buffersize.
     buffer_size = av_samples_get_buffer_size(NULL,
             av_get_channel_layout_nb_channels(input_frame->channel_layout),
             input_frame->nb_samples,
             preferedSampleFMT,0);
+    //申请内存，内存对齐处理
     samples = (uint8_t*)av_malloc(buffer_size);
     samplesCursor = 0;
     if(!samples){

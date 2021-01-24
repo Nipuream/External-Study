@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.media.AudioFormat;
@@ -15,23 +14,20 @@ import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-
+import com.nipuream.audiovideo.AudioVideo;
 import com.nipuream.audiovideo.NativeLib;
 import com.nipuream.audiovideo.R;
+import com.nipuream.audiovideo.audio.task.DecodeAAC1Task;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
-
-import javax.security.auth.login.LoginException;
 
 
 public class AudioProcessActivity extends AppCompatActivity {
 
     private static final String TAG = "AudioProcessActivity";
-
     //音频输入-麦克风
     private final static int AUDIO_INPUT = MediaRecorder.AudioSource.MIC;
     //采用频率
@@ -52,8 +48,8 @@ public class AudioProcessActivity extends AppCompatActivity {
     private boolean pause ;
     //是否已经开始录音
     private boolean start = false;
-
     private boolean audioIsPlay = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +78,6 @@ public class AudioProcessActivity extends AppCompatActivity {
 
         file = new File(dir, "yanghui.pcm");
     }
-
 
     public void startRecord(View view) {
 
@@ -150,7 +145,6 @@ public class AudioProcessActivity extends AppCompatActivity {
     public void encodeAAC(View view) {
 
         new Thread(){
-
             @Override
             public void run() {
                 super.run();
@@ -160,6 +154,12 @@ public class AudioProcessActivity extends AppCompatActivity {
                 Log.i(TAG,"encode AAC end.");
             }
         }.start();
+    }
+
+    public void decodeAAC(View view) {
+        Log.i(TAG,"decodeAAC ...");
+        AudioVideo.execPool.submit(
+                new DecodeAAC1Task("/sdcard/Android/output.aac", "/sdcard/Android/decode_aac.pcm"));
     }
 
 
@@ -182,7 +182,7 @@ public class AudioProcessActivity extends AppCompatActivity {
                 FileInputStream fis = null;
                 try {
 
-                    fis = new FileInputStream("/sdcard/Android/yanghui.pcm");
+                    fis = new FileInputStream("/sdcard/Android/decode_aac.pcm");
                     audioTrack.play();
 
                     byte[] buffer = new byte[bufferSize];
@@ -212,5 +212,6 @@ public class AudioProcessActivity extends AppCompatActivity {
         }.start();
 
     }
+
 
 }

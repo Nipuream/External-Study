@@ -37,12 +37,21 @@
         />
 
     <Button
+        android:id="@+id/decodeAAC"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="decodeAAC"
+        android:onClick="decodeAAC"
+        app:layout_constraintTop_toBottomOf="@+id/encodeAAC"
+        />
+
+    <Button
         android:id="@+id/playPcm"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="playPcm"
         android:onClick="playPcm"
-        app:layout_constraintTop_toBottomOf="@+id/encodeAAC"
+        app:layout_constraintTop_toBottomOf="@+id/decodeAAC"
         />
 
 
