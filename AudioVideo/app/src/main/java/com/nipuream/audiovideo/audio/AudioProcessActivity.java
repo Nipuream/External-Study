@@ -214,4 +214,10 @@ public class AudioProcessActivity extends AppCompatActivity {
     }
 
 
+    public void playPcmWithSL(View view) {
+        Log.i(TAG,"play pcm with sl ....");
+        NativeLib.playPcmWithSL("/sdcard/Android/yanghui.pcm");
+    }
+
+
 }

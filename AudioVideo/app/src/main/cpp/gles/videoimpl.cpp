@@ -8,7 +8,7 @@
 //使用OpenGL ES 2.0 也需要在 CMakeLists.txt 中添加 GLESv2库，并指定头文件
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
-#include "base.h"
+#include "../include/base.h"
 
 extern ANativeWindow* nativeWindow;
 

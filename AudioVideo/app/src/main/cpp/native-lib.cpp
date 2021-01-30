@@ -1,6 +1,7 @@
 #include <jni.h>
 #include "include/base.h"
 #include <libyuv.h>
+#include "include/opensl_audio_player.h"
 
 
 ANativeWindow* nativeWindow;
@@ -129,14 +130,14 @@ Java_com_nipuream_audiovideo_NativeLib_scale(
     dst_v = dst + dst_y_size + dst_u_size;
 
     libyuv::I420Scale(src_y, src_stride_y,
-            src_u, src_stride_u,
-            src_v, src_stride_v,
-            srcWidth, srcHeight,
-            dst_y, dst_stride_y,
-            dst_u, dst_stride_u,
-            dst_v, dst_stride_v,
-            dstWidth, dstHeight,
-            libyuv::FilterMode::kFilterNone);
+                      src_u, src_stride_u,
+                      src_v, src_stride_v,
+                      srcWidth, srcHeight,
+                      dst_y, dst_stride_y,
+                      dst_u, dst_stride_u,
+                      dst_v, dst_stride_v,
+                      dstWidth, dstHeight,
+                      libyuv::FilterMode::kFilterNone);
 
     env->ReleaseByteArrayElements(src_, data, 0);
     env->SetByteArrayRegion(dst_,0, size, reinterpret_cast<const jbyte *>(dst));
@@ -173,7 +174,7 @@ Java_com_nipuream_audiovideo_NativeLib_rotation(
 
 
     libyuv::I420Rotate(src_y, width, src_u, width >> 1, src_v, width >> 1,
-            dst_y, height, dst_u, height >> 1, dst_v, height >> 1, width, height,
+                       dst_y, height, dst_u, height >> 1, dst_v, height >> 1, width, height,
                        static_cast<libyuv::RotationMode>(degress));
 
     jbyteArray result = env->NewByteArray(size);
@@ -198,3 +199,70 @@ Java_com_nipuream_audiovideo_NativeLib_encodeAAC(JNIEnv* env, jclass clazz,jstri
     env->ReleaseStringUTFChars(aacPathParam, aacPath);
     env->ReleaseStringUTFChars(pcmPathParam, pcmPath);
 }
+
+
+
+//============================================ OPENSL ES ======================================
+
+FILE *pcmFile = 0;
+bool isPlaying = false;
+OpenSLAudioPlay *sIAudioPlayer = NULL;
+void closeOpenSl();
+
+
+void *playThreadFunc(void* arg){
+    const int bufferSize = 2048;
+    short buffer[bufferSize];
+    while (isPlaying && !feof(pcmFile)){
+        fread(buffer, 1, bufferSize, pcmFile);
+        sIAudioPlayer->enqueueSample(buffer, bufferSize);
+    }
+    closeOpenSl();
+    return 0;
+}
+
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_nipuream_audiovideo_NativeLib_playPcmWithSL(JNIEnv* env, jclass clazz, jstring pcmPath){
+
+    const char* _pcmPath = env->GetStringUTFChars(pcmPath, NULL);
+
+    if(sIAudioPlayer){
+        sIAudioPlayer->release();
+        delete sIAudioPlayer;
+        sIAudioPlayer = NULL;
+    }
+
+    //实例化 OpenSlAudioPlay
+    sIAudioPlayer = new OpenSLAudioPlay(44100, SAMPLE_FORMAT_16, 1);
+    sIAudioPlayer->init();
+
+
+    pcmFile = fopen(_pcmPath, "r");
+    isPlaying = true;
+    pthread_t  playThread;
+    pthread_create(&playThread, NULL, playThreadFunc, 0);
+
+    env->ReleaseStringUTFChars(pcmPath, _pcmPath);
+}
+
+
+void closeOpenSl(){
+    isPlaying = false;
+    if(sIAudioPlayer){
+        sIAudioPlayer->release();
+        delete sIAudioPlayer;
+        sIAudioPlayer = NULL;
+    }
+
+    if(pcmFile){
+        fclose(pcmFile);
+        pcmFile = NULL;
+    }
+}
+
+
+
+//============================================ OPENSL ES ======================================
+

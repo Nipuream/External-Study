@@ -11,7 +11,7 @@ set(OpenSL ${CMAKE_SOURCE_DIR}/opensl)
 set(OpenGL ${CMAKE_SOURCE_DIR}/gles)
 
 #批量添加 cpp 文件
-file(GLOB ALL_CPP ${OpenSL}/*.cpp ${OpenGL}/*.cpp)
+file(GLOB ALL_CPP ${OpenSL}/*.cpp ${OpenGL}/*.cpp )
 file(GLOB ALL_AUDIO_ENCODER_CPP ${CMAKE_SOURCE_DIR}/process/*.cpp)
 
 #将cpp 生成动态库
@@ -58,7 +58,7 @@ add_library( # Sets the name of the library.
 
 
 #添加头文件
-include_directories(${CMAKE_SOURCE_DIR}/include)
+#include_directories(${CMAKE_SOURCE_DIR}/include)
 
 
 

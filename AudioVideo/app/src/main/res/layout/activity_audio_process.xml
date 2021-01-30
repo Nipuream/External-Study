@@ -54,5 +54,13 @@
         app:layout_constraintTop_toBottomOf="@+id/decodeAAC"
         />
 
+    <Button
+        android:id="@+id/playPcmWithSL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="playPcmWithSL"
+        android:onClick="playPcmWithSL"
+        app:layout_constraintTop_toBottomOf="@+id/playPcm"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
