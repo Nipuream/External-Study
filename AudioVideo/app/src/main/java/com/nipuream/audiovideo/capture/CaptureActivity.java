@@ -63,6 +63,7 @@ public class CaptureActivity extends AppCompatActivity {
         }
     }
 
+    //1080 1440
     private void setupCamera2(final int width, final int height) {
 
         handlerThread = new HandlerThread("camera2");
@@ -84,6 +85,7 @@ public class CaptureActivity extends AppCompatActivity {
 
                     //获取到照片数据
                     Image image = imageReader.acquireLatestImage();
+                    Log.i("yanghui","width : "+ image.getWidth() + ", height : "+ image.getHeight());
 
                     if(image == null){
                         return ;
@@ -95,6 +97,7 @@ public class CaptureActivity extends AppCompatActivity {
                      * rowStride 判断Y分量是否有无效数据
                      */
                     Image.Plane[] planes = image.getPlanes();
+
 
 //plane.pixelStride : 1, rowStride : 512, width : 480, height : 640, buffer.size : 327648
 //plane.pixelStride : 2, rowStride : 512, width : 480, height : 640, buffer.size : 163807
@@ -174,7 +177,8 @@ public class CaptureActivity extends AppCompatActivity {
             previewRequestBuilder.addTarget(mImageReader.getSurface());
 
             // 创建CameraCaptureSession，该对象负责管理处理预览请求和拍照请求
-            mCameraDevice.createCaptureSession(Arrays.asList(surfaceHolder.getSurface(), mImageReader.getSurface()), new CameraCaptureSession.StateCallback() {
+            mCameraDevice.createCaptureSession(Arrays.asList(surfaceHolder.getSurface(), mImageReader.getSurface()),
+                    new CameraCaptureSession.StateCallback() {
 
                 @Override
                 public void onConfigured(@NonNull CameraCaptureSession cameraCaptureSession) {
@@ -190,6 +194,7 @@ public class CaptureActivity extends AppCompatActivity {
                         previewRequestBuilder.set(CaptureRequest.CONTROL_AE_MODE, CaptureRequest.CONTROL_AE_MODE_ON_AUTO_FLASH);
                         //显示预览
                         CaptureRequest previewRequest = previewRequestBuilder.build();
+                        //一直返回数据
                         cameraCaptureSession.setRepeatingRequest(previewRequest, null,clientHandler);
                     } catch (CameraAccessException e) {
                         e.printStackTrace();
@@ -226,8 +231,6 @@ public class CaptureActivity extends AppCompatActivity {
             }
             fileOutputStream = null;
         }
-
-
     }
 
 
@@ -253,18 +256,18 @@ public class CaptureActivity extends AppCompatActivity {
                 return;
             }
 
-            setupCamera2(1080,1440);
+            //这个一个很重要的点，预览的宽高 和我们 保存的相反
+            setupCamera2(1440,1080);
         }
 
         @Override
         public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) {
-
         }
 
         @Override
         public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
-
         }
+
     }
 
 

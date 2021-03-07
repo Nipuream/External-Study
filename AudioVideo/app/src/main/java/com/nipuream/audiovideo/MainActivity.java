@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     public void playYUVwithGl(View view) {
 
         File dir = getExternalCacheDir();
+        Log.i("yanghui","dir : "+ dir.toString());
         File file = new File(dir, "yanghui.yuv");
 
         if(!file.exists()){
@@ -72,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
 
             MainActivity.this.surfaceHolder = surfaceHolder;
             setSurface(surfaceHolder.getSurface());
-            showBitmap();
+//            showBitmap();
         }
 
         @Override

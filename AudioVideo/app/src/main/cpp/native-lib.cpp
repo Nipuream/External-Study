@@ -3,7 +3,6 @@
 #include <libyuv.h>
 #include "include/opensl_audio_player.h"
 
-
 ANativeWindow* nativeWindow;
 
 extern "C" JNIEXPORT jstring JNICALL

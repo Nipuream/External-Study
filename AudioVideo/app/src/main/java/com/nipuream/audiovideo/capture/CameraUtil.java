@@ -75,8 +75,6 @@ public class CameraUtil {
         byte[] rowUv = new byte[width];
         for(int i = 0; i < height /2; i++){
 
-//            Log.i(TAG,"remain size : " + uvBuffer.remaining() + ", i : "+ i);
-
             int length = width;
             if(uvBuffer.remaining() < length){
                 length = uvBuffer.remaining();

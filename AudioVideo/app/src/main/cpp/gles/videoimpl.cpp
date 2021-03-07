@@ -21,8 +21,9 @@ bool isPlay = false;
 //const int width = 480;
 //const int height = 640;
 
-const int width = 640;
-const int height = 480;
+const int width = 1080;
+const int height = 1440;
+
 
 //顶点着色器，每个顶点执行一次，可以并行执行
 #define GET_STR(x) #x

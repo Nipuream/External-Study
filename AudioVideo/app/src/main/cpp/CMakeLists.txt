@@ -13,6 +13,7 @@ set(OpenGL ${CMAKE_SOURCE_DIR}/gles)
 #批量添加 cpp 文件
 file(GLOB ALL_CPP ${OpenSL}/*.cpp ${OpenGL}/*.cpp )
 file(GLOB ALL_AUDIO_ENCODER_CPP ${CMAKE_SOURCE_DIR}/process/*.cpp)
+file(GLOB ALL_LIB_COMMON_CPP ${CMAKE_SOURCE_DIR}/libcommon/*.cpp ${CMAKE_SOURCE_DIR}/libcommon/egl_core/*.cpp ${CMAKE_SOURCE_DIR}/libcommon/message_queue/*.cpp ${CMAKE_SOURCE_DIR}/libcommon/opengl_media/*.cpp ${CMAKE_SOURCE_DIR}/libcommon/opensl_media/*.cpp)
 
 #将cpp 生成动态库
 #add_library(audiovideo SHARED ${ALL_CPP})
@@ -32,6 +33,7 @@ add_library( # Sets the name of the library.
 
              ${ALL_CPP}
              ${ALL_AUDIO_ENCODER_CPP}
+             ${ALL_LIB_COMMON_CPP}
 
              # Provides a relative path to your source file(s).
              native-lib.cpp )
@@ -59,7 +61,6 @@ add_library( # Sets the name of the library.
 
 #添加头文件
 #include_directories(${CMAKE_SOURCE_DIR}/include)
-
 
 
 # =========================================  libyuv =====================================
@@ -91,17 +92,6 @@ set(PATH_TO_PRE_BUILT ${CMAKE_SOURCE_DIR}/ffmpeg/prebuilt)
 message("PREBUILT ${PATH_TO_PRE_BUILT}")
 
 
-#==================================== audio_encoder  =====================================
-
-#file(GLOB ALL_AUDIO_ENCODER_CPP ${CMAKE_SOURCE_DIR}/process/*.cpp)
-
-
-#add_library(
-#        audio_encode
-#        SHARED
-#        ${ALL_AUDIO_ENCODER_CPP}
-#)
-
 
 #链接库
 target_link_libraries( # Specifies the target library.
@@ -117,7 +107,6 @@ target_link_libraries( # Specifies the target library.
                        z
                        m
                        dl
-#                       audio_encode
 
 
         #引入静态库 顺序不能弄错，否则会链接不上
