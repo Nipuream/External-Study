@@ -3,14 +3,15 @@
     package="com.nipuream.audiovideo">
 
     <application
+        android:name=".AudioVideo"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:name=".AudioVideo"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".audio.AudioProcessActivity"></activity>
+        <activity android:name=".video.PreviewRecordingActivity"></activity>
+        <activity android:name=".audio.AudioProcessActivity" />
         <activity android:name=".capture.CaptureActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
@@ -20,16 +21,16 @@
             </intent-filter>
         </activity>
     </application>
-    <uses-feature android:name="android.hardware.camera.front" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
-
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <uses-feature android:name="android.hardware.camera.front" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
 </manifest>

@@ -18,13 +18,13 @@ public class NativeLib {
     //对画面进行缩放
     public static native void scale(byte[] src, byte[] dest, int srcWidth, int srcHeight,int dstWidth, int dstHeight);
 
-    /**
-     * 用 ffempeg 编码成 aac 文件
-     */
+    //用 ffempeg 编码成 aac 文件
     public static native void encodeAAC(String pcmPath, int channels, int bitRate, int sampleRate, String accPath);
-
 
     //使用 OpenSL ES 对pcm 流进行播放
     public static native void playPcmWithSL(String path);
+
+    //使用 ffempeg 将yuv文件编码生成 h.264文件
+    public static native void encodeH264(String input, String output);
 
 }

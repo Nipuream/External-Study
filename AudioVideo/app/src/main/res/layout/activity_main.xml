@@ -42,5 +42,14 @@
         app:layout_constraintTop_toBottomOf="@+id/playYUVwithGl"
         android:layout_height="wrap_content" />
 
+    <Button
+        android:id="@+id/encodeh264"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="encodeh264"
+        android:onClick="encodeh264"
+        app:layout_constraintTop_toBottomOf="@+id/record_audio"
+        />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

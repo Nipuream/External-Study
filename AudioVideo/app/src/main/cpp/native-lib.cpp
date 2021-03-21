@@ -4,6 +4,7 @@
 #include "include/opensl_audio_player.h"
 
 ANativeWindow* nativeWindow;
+extern void yuvEncodeH264(const char* input, const char* output);
 
 extern "C" JNIEXPORT jstring JNICALL
 Java_com_nipuream_audiovideo_NativeLib_stringFromJNI(
@@ -199,6 +200,17 @@ Java_com_nipuream_audiovideo_NativeLib_encodeAAC(JNIEnv* env, jclass clazz,jstri
     env->ReleaseStringUTFChars(pcmPathParam, pcmPath);
 }
 
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_nipuream_audiovideo_NativeLib_encodeH264(JNIEnv* env, jclass clazz,jstring input, jstring output){
+
+    const char* input_path = env->GetStringUTFChars(input, NULL);
+    const char* output_path = env->GetStringUTFChars(output, NULL);
+    yuvEncodeH264(input_path, output_path);
+    env->ReleaseStringUTFChars(input, input_path);
+    env->ReleaseStringUTFChars(output, output_path);
+}
 
 
 //============================================ OPENSL ES ======================================

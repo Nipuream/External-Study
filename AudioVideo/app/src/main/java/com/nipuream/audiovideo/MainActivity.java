@@ -1,7 +1,6 @@
 package com.nipuream.audiovideo;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,10 +9,8 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-
 import com.nipuream.audiovideo.audio.AudioProcessActivity;
 import com.nipuream.audiovideo.capture.CaptureActivity;
-
 import java.io.File;
 
 public class MainActivity extends AppCompatActivity {
@@ -66,6 +63,18 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(this, AudioProcessActivity.class));
     }
 
+    public void encodeh264(View view) {
+
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                NativeLib.encodeH264("/storage/emulated/0/Android/data/com.nipuream.audiovideo/cache/yanghui.yuv",
+                        "/storage/emulated/0/Android/data/com.nipuream.audiovideo/cache/output.h264");
+            }
+        }.start();
+    }
+
     private final class SurfaceCallback implements SurfaceHolder.Callback {
 
         @Override
@@ -86,7 +95,6 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
-
 
     //将surface传递到native层
     public native void setSurface(Object surface);

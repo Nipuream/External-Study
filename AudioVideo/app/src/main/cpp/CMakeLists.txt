@@ -121,9 +121,6 @@ target_link_libraries( # Specifies the target library.
         ${PATH_TO_PRE_BUILT}/libfdk-aac.a
         ${PATH_TO_PRE_BUILT}/libswresample.a
 
-
-
-
                        # Links the target library to the log library
                        # included in the NDK.
 #                       ${log-lib}
