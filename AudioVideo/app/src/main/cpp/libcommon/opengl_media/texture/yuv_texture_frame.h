@@ -1,7 +1,7 @@
 #ifndef 	VIDEO_PLAYER_YUV_TEXTURE_FRAME_H
 #define VIDEO_PLAYER_YUV_TEXTURE_FRAME_H
 
-#include "opengl_media/movie_frame.h"
+#include "./../../opengl_media/movie_frame.h"
 #include "texture_frame.h"
 
 /**

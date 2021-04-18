@@ -5,7 +5,7 @@
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
 #include "../texture/texture_frame.h"
-#include "egl_core/gl_tools.h"
+#include "./../../egl_core/gl_tools.h"
 
 static char* NO_FILTER_VERTEX_SHADER =
 		"attribute vec4 vPosition;\n"

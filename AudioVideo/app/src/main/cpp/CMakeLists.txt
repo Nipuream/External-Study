@@ -13,7 +13,21 @@ set(OpenGL ${CMAKE_SOURCE_DIR}/gles)
 #批量添加 cpp 文件
 file(GLOB ALL_CPP ${OpenSL}/*.cpp ${OpenGL}/*.cpp )
 file(GLOB ALL_AUDIO_ENCODER_CPP ${CMAKE_SOURCE_DIR}/process/*.cpp)
-file(GLOB ALL_LIB_COMMON_CPP ${CMAKE_SOURCE_DIR}/libcommon/*.cpp ${CMAKE_SOURCE_DIR}/libcommon/egl_core/*.cpp ${CMAKE_SOURCE_DIR}/libcommon/message_queue/*.cpp ${CMAKE_SOURCE_DIR}/libcommon/opengl_media/*.cpp ${CMAKE_SOURCE_DIR}/libcommon/opensl_media/*.cpp)
+file(GLOB ALL_LIB_COMMON_CPP ${CMAKE_SOURCE_DIR}/libcommon/*.cpp
+        ${CMAKE_SOURCE_DIR}/libcommon/egl_core/*.cpp
+        ${CMAKE_SOURCE_DIR}/libcommon/message_queue/*.cpp
+        ${CMAKE_SOURCE_DIR}/libcommon/opensl_media/*.cpp
+        ${CMAKE_SOURCE_DIR}/libcommon/opengl_media/*.cpp
+        ${CMAKE_SOURCE_DIR}/libcommon/opengl_media/render/*.cpp
+        ${CMAKE_SOURCE_DIR}/libcommon/opengl_media/texture/*.cpp
+        ${CMAKE_SOURCE_DIR}/libcommon/opengl_media/texture_copier/*.cpp
+        ${CMAKE_SOURCE_DIR}/video_encode/*.cpp
+        ${CMAKE_SOURCE_DIR}/video_encode/soft_encoder/*.cpp
+        ${CMAKE_SOURCE_DIR}/video_encode/hw_encoder/*.cpp
+        ${CMAKE_SOURCE_DIR}/video_encode/soft_encoder/color_conversion/color_conversion_default.cpp
+        ${CMAKE_SOURCE_DIR}/preview/*.cpp
+        )
+
 
 #将cpp 生成动态库
 #add_library(audiovideo SHARED ${ALL_CPP})

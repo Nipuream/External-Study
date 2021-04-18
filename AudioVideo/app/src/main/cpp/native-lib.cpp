@@ -2,6 +2,8 @@
 #include "include/base.h"
 #include <libyuv.h>
 #include "include/opensl_audio_player.h"
+#include "preview/mv_recording_preview_controller.h"
+#include <sys/types.h>
 
 ANativeWindow* nativeWindow;
 extern void yuvEncodeH264(const char* input, const char* output);
@@ -275,5 +277,119 @@ void closeOpenSl(){
 
 
 
+
+
 //============================================ OPENSL ES ======================================
 
+
+static MVRecordingPreviewController *previewControl = 0;
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_nipuream_audiovideo_video_RecordingPreviewScheduler_startEncoding(JNIEnv *env,
+                                                                           jobject thiz, jint width,
+                                                                           jint height,
+                                                                           jint video_bit_rate,
+                                                                           jint frame_rate,
+                                                                           jboolean use_hard_ware_encoding,
+                                                                           jstring output_path) {
+
+    if(previewControl != NULL){
+        const char* h264FilePath = env->GetStringUTFChars(output_path, NULL);
+        previewControl->startEncoding(h264FilePath, width, height, video_bit_rate, frame_rate, use_hard_ware_encoding);
+        env->ReleaseStringUTFChars(output_path, h264FilePath);
+    }
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_nipuream_audiovideo_video_RecordingPreviewScheduler_stopEncoding(JNIEnv *env,
+                                                                          jobject thiz) {
+
+    if(previewControl != NULL){
+        previewControl->stopEncoding();
+    }
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_nipuream_audiovideo_video_RecordingPreviewScheduler_switchCameraFacing(JNIEnv *env,
+                                                                                jobject thiz) {
+    if(previewControl != NULL){
+        previewControl->switchCameraFacing();
+    }
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_nipuream_audiovideo_video_RecordingPreviewScheduler_prepareEGLContext(JNIEnv *env,
+                                                                               jobject thiz,
+                                                                               jobject surface,
+                                                                               jint width,
+                                                                               jint height,
+                                                                               jint camera_facing_id) {
+
+    previewControl = new MVRecordingPreviewController();
+    JavaVM *g_jvm = NULL;
+    env->GetJavaVM(&g_jvm);
+    jobject  g_obj = env->NewGlobalRef(thiz);
+    if(surface != 0 && previewControl != NULL){
+        ANativeWindow *window = ANativeWindow_fromSurface(env, surface);
+        if(window != NULL){
+            previewControl->prepareEGLContext(window, g_jvm, g_obj, width, height, camera_facing_id);
+        }
+    }
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_nipuream_audiovideo_video_RecordingPreviewScheduler_createWindowSurface(JNIEnv *env,
+                                                                                 jobject thiz,
+                                                                                 jobject surface) {
+
+    if(surface != 0 && previewControl != NULL){
+        ANativeWindow *window = ANativeWindow_fromSurface(env, surface);
+        if(window != NULL){
+            previewControl->createWindowSurface(window);
+        }
+    }
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_nipuream_audiovideo_video_RecordingPreviewScheduler_resetRenderSize(JNIEnv *env,
+                                                                             jobject thiz,
+                                                                             jint width,
+                                                                             jint height) {
+    if(previewControl != NULL){
+        previewControl->resetRenderSize(width, height);
+    }
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_nipuream_audiovideo_video_RecordingPreviewScheduler_destroyWindowSurface(JNIEnv *env,
+                                                                                  jobject thiz) {
+    if(previewControl != NULL){
+        previewControl->destroyWindowSurface();
+    }
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_nipuream_audiovideo_video_RecordingPreviewScheduler_destroyEGLContext(JNIEnv *env,
+                                                                               jobject thiz) {
+    if(previewControl != NULL){
+        previewControl->destroyEGLContext();
+        delete previewControl;
+        previewControl = NULL;
+    }
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_nipuream_audiovideo_video_RecordingPreviewScheduler_notifyFrameAvailable(JNIEnv *env,
+                                                                                  jobject thiz) {
+    if(previewControl != NULL){
+        previewControl->notifyFrameAvailable();
+    }
+}

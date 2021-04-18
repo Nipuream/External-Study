@@ -5,7 +5,6 @@ import android.view.Surface;
 public class RecordingPreviewScheduler {
 
 
-    /*
     public native void startEncoding(int width, int height, int videoBitRate, int frameRate, boolean useHardWareEncoding, String outputPath);
     public native void stopEncoding();
 
@@ -24,6 +23,5 @@ public class RecordingPreviewScheduler {
 
     //当camera捕捉了新的一帧图像的时候会调用这个方法，因为更新纹理必须要在 EGLThread中
     public native void notifyFrameAvailable();
-     */
 
 }
