@@ -8,3 +8,4 @@
 - RetrofitTest 学习
 - StateMachineTest Android framework 状态机的学习
 - AudioVideo 对音视频的学习经历
+- render 实现外部纹理渲染、抓图功能
